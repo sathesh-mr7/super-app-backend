@@ -6,14 +6,12 @@ import { createConnections } from 'typeorm';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
-
 createConnections().then(async connnection => {
-
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(process.env.GRAPHQL_PATH!, graphqlHTTP((request, response, graphQLParams) => ({
+app.use(process.env.API_PATH!, graphqlHTTP((request, response, graphQLParams) => ({
   schema: schema,
   rootValue: root,
   graphiql: true,
@@ -23,9 +21,8 @@ app.use(process.env.GRAPHQL_PATH!, graphqlHTTP((request, response, graphQLParams
   }
 })));
 
-
 app.listen(parseInt(process.env.APP_PORT!));
-const link = `http://localhost:${process.env.APP_PORT!}${process.env.GRAPHQL_PATH}`;
+const link = `http://localhost:${process.env.APP_PORT!}${process.env.API_PATH}`;
 console.log(`Server is run at: ${link}`);
 
 }).catch(error => console.log(error))

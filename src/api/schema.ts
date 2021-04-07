@@ -10,7 +10,7 @@ export const schema = buildSchema(`
     profile: Profile
   }
   type Mutation {
-    register(email: String!, password: String!, confirmation: String!): RegisteredUser
+    register(email: String!, fname: String!, lname: String!, password: String!, confirmation: String!, city: String!, country: String!, mobile: String!): RegisteredUser
     login(email: String!, password: String!): AccessToken
     confirm(email: String!): Boolean
     refreshToken: AccessToken
@@ -30,10 +30,10 @@ export const schema = buildSchema(`
 `);
 
 export const root = {
-  register: async ({email, password, confirmation}:
-     {email: string, password: string, confirmation: string}, context: any) => {
+  register: async ({email, fname, lname, password, confirmation, city, country, mobile}:
+     {email: string, fname: string, lname: string, password: string, confirmation: string, city: string, country: string, mobile: string}, context: any) => {
 
-    const result = await User.register(email, password, confirmation);
+    const result = await User.register(email, fname, lname, password, confirmation, city, country, mobile);
     context.res.status(result.status);
 
     if(result.isError()) {

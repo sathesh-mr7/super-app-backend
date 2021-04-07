@@ -20,11 +20,26 @@ export default class User {
   email: string;
 
   @Column({ nullable: false, length: 100 })
+  fname: string;
+
+  @Column({ nullable: false, length: 100 })
+  lname: string;
+
+  @Column({ nullable: false, length: 100 })
   password: string;
+
+  @Column({ nullable: false, length: 100 })
+  city: string;
+
+  @Column({ nullable: false, length: 100 })
+  country: string;
+
+  @Column({ length: 18 })
+  mobile: string;
 
   @Column({ nullable: false, default: false })
   confirmed: boolean;
-
+  
   @Column({ name: 'refresh_index', nullable: false, default: 0 })
   refreshIndex: number;
 
@@ -37,11 +52,16 @@ export default class User {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt?: Date;
 
-  constructor(email: string, password: string, refreshIndex: number) {
+  constructor(email: string, fname: string, lname: string, password: string, city: string, country: string, mobile: string, refreshIndex: number) {
     this.id = 0;
     this.ukey = "";
     this.email = email;
+    this.fname = fname;
+    this.lname = lname;
     this.password = password;
+    this.city = city;
+    this.country = country;
+    this.mobile = mobile;
     this.confirmed = false;
     this.refreshIndex = refreshIndex;
     this.createdAt = new Date();
@@ -63,7 +83,7 @@ export default class User {
     return await db.save(this);
   }
 
-  static async register(email: string, password: string, confirmation: string): Promise<Result<User>> {
+  static async register(email: string, fname: string, lname: string, password: string, confirmation: string, city: string, country: string, mobile: string): Promise<Result<User>> {
     if (password != confirmation)
       return new Result<User>(new Error('Passwords do not match'), 400);
 
@@ -73,7 +93,7 @@ export default class User {
 
     try {
       const hpass = await hash(password, 12);
-      const user = new User(email, hpass, 0);
+      const user = new User(email, fname, lname, hpass, city, country, mobile, 0);
       user.ukey = uuidv4();
       if (await user.save())
         return new Result<User>(user, 201);
